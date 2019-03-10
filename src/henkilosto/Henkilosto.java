@@ -1,3 +1,6 @@
+/*
+ Muokattu Githubissa
+ */
 package henkilosto;
 
 /**
