@@ -1,7 +1,6 @@
 package personnel;
 
 import java.util.Scanner;
-
 /**
  *
  * @author Annika Heino

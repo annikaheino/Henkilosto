@@ -3,7 +3,6 @@ package personnel;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-
 /**
  *
  * @author Annika Heino
@@ -94,5 +93,4 @@ public class Person {
                 .append(IsPermanentEmployment ? " permanent" : " fixed-period");
         return sb.toString();
     }
-
 }

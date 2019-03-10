@@ -2,7 +2,6 @@
  Muokattu Githubissa
  */
 package henkilosto;
-
 /**
  *
  * @author Annika Heino
