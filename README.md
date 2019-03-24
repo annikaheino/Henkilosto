@@ -4,7 +4,7 @@
 ## Käyttäjäroolit
 Pääkäyttäjänä henkilöstöjärjestelmässä toimii HR-asiantuntija, jolla on kaikki käyttöoikeudet. Lähtökohtaisesti vain pääkäyttäjä lisää, muokkaa ja poistaa henkilöitä. Pääkäyttäjän lisäksi järjestelmään pääsee johto ja esimiehet. Tarkoituksena olisi, että johdolla on laajat raportointioikeudet. Esimiehet taas pääsevät raportoimaan oman yksikkönsä tietoja. Seuraavana tavoitteena on muokata käyttöoikeuksia niin, että esimiehet pääsevät muokkaamaan vain oman yksikkönsä tietoja, mutta lisäys- ja poisto-oikeudet pysyvät edelleen pääkäyttäjällä.
 ## Kuvaus ohjelmiston toiminnallisista vaatimuksista
-1. Henkilöiden lisäysjärjestelmään
+1. Henkilöiden lisäys järjestelmään
 1. Henkilöiden kiinnittäminen tehtävään
 1. Henkilön tietojen muokkaus 
 1. Henkilön tehtäväkiinnityksen poisto
