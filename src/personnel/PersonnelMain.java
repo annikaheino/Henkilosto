@@ -1,4 +1,5 @@
 package personnel;
+
 /**
  *
  * @author Annika Heino
@@ -15,4 +16,5 @@ public class PersonnelMain {
         personnelUI.startApplication();
 
     }
+
 }

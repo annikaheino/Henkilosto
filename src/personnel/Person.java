@@ -9,24 +9,31 @@ import java.time.format.DateTimeFormatter;
  */
 public class Person {
 
-    private String FirstName;
+    private final Integer Id;
     private String LastName;
+    private String FirstName;
     private final LocalDate BirthDate;
     private String Gender;
-    private String Position;
-    private final LocalDate EmploymentStartDate;
-    private int CompetenceClass;
-    private Boolean IsPermanentEmployment;
 
-    public Person(String FirstName, String LastName, LocalDate BirthDate, String Gender, String Position, LocalDate EmploymentStartDate, Boolean IsPermanentEmployment, int competenceClass ) {
-        this.FirstName = FirstName;
-        this.LastName = LastName;
-        this.BirthDate = BirthDate;
-        this.Gender = Gender;
-        this.Position = Position;
-        this.EmploymentStartDate = EmploymentStartDate;
-        this.IsPermanentEmployment = IsPermanentEmployment;
-        this.CompetenceClass = competenceClass;
+    public Person(Integer id, String LastName, String FirstName, String BirthDate, String Gender ) {
+        this.Id = id;
+        this.LastName = Utils.capitlizeString(LastName);
+        this.FirstName = Utils.capitlizeString(FirstName);
+        this.BirthDate = Utils.string_yyyyMMdd_ToLocalDate(BirthDate);
+        this.Gender = Utils.capitlizeString(Gender);
+    }
+
+    public LocalDate getBirthDate() {
+        return BirthDate;
+    }
+    
+    public String getBirthdayString_yyyyMMdd() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return BirthDate.format(formatter);
+    }
+
+    public Integer getId() {
+        return Id;
     }
 
     public String getFirstName() {
@@ -34,7 +41,7 @@ public class Person {
     }
 
     public void setFirstName(String FirstName) {
-        this.FirstName = FirstName;
+        this.FirstName = Utils.capitlizeString(FirstName);
     }
 
     public String getLastName() {
@@ -42,7 +49,7 @@ public class Person {
     }
 
     public void setLastName(String LastName) {
-        this.LastName = LastName;
+        this.LastName = Utils.capitlizeString(LastName);
     }
 
     public String getGender() {
@@ -50,47 +57,18 @@ public class Person {
     }
 
     public void setGender(String Gender) {
-        this.Gender = Gender;
+        this.Gender = Utils.capitlizeString(Gender);
     }
-
-    public String getPosition() {
-        return Position;
-    }
-
-    public void setPosition(String Position) {
-        this.Position = Position;
-    }
-
-    public LocalDate getEmploymentStartDate() {
-        return EmploymentStartDate;
-    }
-
-    public Boolean getIsPermanentEmployment() {
-        return IsPermanentEmployment;
-    }
-
-    public void setIsPermanentEmployment(Boolean IsPermanentEmployment) {
-        this.IsPermanentEmployment = IsPermanentEmployment;
-    }
-
-    public int getCompetenceClass() {
-        return CompetenceClass;
-    }
-
-    public void setCompetenceClass(int CompetenceClass) {
-        this.CompetenceClass = CompetenceClass;
+    
+    public String getAgeInYears() {
+        return String.valueOf(Period.between(BirthDate, LocalDate.now()).getYears());
     }
 
     @Override
     public String toString() {
-
-        DateTimeFormatter ldtFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        StringBuilder sb = new StringBuilder();
-        sb.append(LastName).append(" ").append(FirstName).append(", ").append(Gender).append(", ")
-                .append(" age - ").append(Period.between(BirthDate, LocalDate.now()).getYears()).append(", ")
-                .append(Position).append(", competence class ").append(Integer.toString(CompetenceClass))
-                .append(", starting date - ").append(EmploymentStartDate.format(ldtFormatter))
-                .append(IsPermanentEmployment ? " permanent" : " fixed-period");
+        StringBuilder sb = new StringBuilder("Id: " + Id + ", ");
+        sb.append(LastName).append(" ").append(FirstName).append(", ").append(Gender.equals("F") ? "nainen": "mies").append(", ")
+                .append(" ikä - ").append(Period.between(BirthDate, LocalDate.now()).getYears());
         return sb.toString();
     }
 }

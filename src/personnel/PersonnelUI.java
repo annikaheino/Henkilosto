@@ -1,78 +1,189 @@
 package personnel;
 
 import java.util.Scanner;
+
 /**
  *
  * @author Annika Heino
  */
 public class PersonnelUI {
 
+    private final Persons Persons;
+    private final Personnel Personnel;
+    private final Scanner Reader;
+
+    public PersonnelUI() {
+        this.Persons = new Persons();
+        this.Personnel = new Personnel(Persons);
+        this.Reader = new Scanner(System.in);
+    }
+
     public void startApplication() {
-        Scanner reader = new Scanner(System.in);
-                
-        Utils utils = new Utils();
-        Personnel personnel = new Personnel();
-        personnel.addEmployee(new Person("Satu", "Suomalainen", utils.string_yyyyMMdd_ToLocalDate("19880525"), "Female", "Opettaja", utils.string_yyyyMMdd_ToLocalDate("20140402"), true, 3));
-        personnel.addEmployee(new Person("Pauli", "Vaasalainen", utils.string_yyyyMMdd_ToLocalDate("19941206"), "Male", "Rehtori", utils.string_yyyyMMdd_ToLocalDate("20171102"), false, 1));
-        personnel.addEmployee(new Person("Lyydia", "Lappalainen", utils.string_yyyyMMdd_ToLocalDate("19921109"), "Male", "Keittäjä", utils.string_yyyyMMdd_ToLocalDate("20180110"), false, 2));
-        personnel.addEmployee(new Person("Liisa", "Lahtelainen", utils.string_yyyyMMdd_ToLocalDate("19550821"), "Female", "Siivoja", utils.string_yyyyMMdd_ToLocalDate("20140402"), true, 1));
-        personnel.addEmployee(new Person("Matti", "Espoolainen", utils.string_yyyyMMdd_ToLocalDate("19800122"), "Male", "Opettaja", utils.string_yyyyMMdd_ToLocalDate("20150819"), true, 3));
 
         System.out.println("Tervetuloa!");
+        loop:
         while (true) {
             System.out.println("0 - lopetetaan");
-            System.out.println("1 - lisää uuden työntekijän");
-            System.out.println("2 - hae työntekijän tunnuksella (Id)");
-            System.out.println("3 - näytä työntekijät");
-            System.out.println("4 - poista työntekijän");
+            System.out.println("1 - näytä kaikki järjestelmässä olevat henkilöt (tehtävään kiinnitetyt ja vielä kiinnittämättömät)");
+            System.out.println("2 - lisää uusi henkilö järjestelmään");
+            System.out.println("3 - poista henkilö (poista henkilö järjestelmästä kokonaan)");
+            System.out.println("4 - näytä tehtävään kiinnitetyt työntekijät");
+            System.out.println("5 - kiinnitä järjestelmässä oleva henkilö tehtävään");
+            System.out.println("6 - hae tehtävään kiinnitetty henkilö tunnuksella (Id)");
+            System.out.println("7 - poista työntekijän tehtäväkiinnitys tunnuksella (Id)");
+            System.out.println("8 - muokkaa tehtävään kiinnitetyn työntekijän tietoja tunnuksella (Id)");
 
             System.out.println("Mitä tehdään?");
 
-            int komento = Integer.valueOf(reader.nextLine());
+            int komento = Integer.valueOf(Reader.nextLine());
 
-            if (komento == 0) {
-                break;
+            switch (komento) {
+                case 0:
+                    break loop;
+                case 1:
+                    System.out.println(Persons.toString());
+                    break;
+                case 2:
+                    addNewPerson();
+                    break;
+                case 3:
+                    deletePerson();
+                    break;
+                case 4:
+                    System.out.println(Personnel.toString());
+                    break;
+                case 5:
+                    addNewEmployee();
+                    break;
+                case 6:
+                    getEmployeeById();
+                    break;
+                case 7:
+                    deleteEmployee();
+                    break;
+                case 8:
+                    updateEmployee();
+                    break;
+                default:
+                    System.out.println("Näppäilyvirhe!");
             }
-            if(komento == 1) {
-                System.out.print("Syötä uuden työntekijän etunimi: ");
-                String firtsName = reader.nextLine();
-                System.out.print("Syötä uuden työntekijän sukunimi: ");
-                String lastName = reader.nextLine();
-                System.out.print("Syötä uuden työntekijän syntymäpäivän muodossa vvvvMMdd: ");
-                String birthDate = reader.nextLine();
-                System.out.print("Syötä uuden työntekijän sukupuoli: ");
-                String gender = reader.nextLine();
-                System.out.print("Syötä uuden työntekijän titteli: ");
-                String position = reader.nextLine();
-                System.out.print("Syötä työsopimuksen aloituspäivän muodossa vvvvMMdd: ");
-                String startingDate = reader.nextLine();
-                System.out.print("Onko tuleva työsuhde vakituinen? (k) - kyllä, (n) tai muu merkki - ei: ");
-                Boolean isPermanent = reader.nextLine().equals("k") ? true : false;
-                System.out.print("Syötä vaativuusluokka 1, 2 tai 3: ");
-                int competenceClass = Integer.valueOf(reader.nextLine());
-                Person newPerson = new Person(firtsName, lastName, utils.string_yyyyMMdd_ToLocalDate(birthDate), gender, position, utils.string_yyyyMMdd_ToLocalDate(startingDate), isPermanent, competenceClass);
-                
-                personnel.addEmployee(newPerson);
-                System.out.println("Uusi työntekijä lisätty, tiedot: ");
-                System.out.println(newPerson.toString());
-            }
-            if(komento == 2) {
-                System.out.println("Syötä haettavan työntekijän tunnus (Id): ");
-                int id = Integer.valueOf(reader.nextLine());
-                System.out.println(personnel.getEmployee(id).toString());
-            }
-            if(komento == 3) {
-                System.out.println(personnel.toString());
-            }
-            if(komento == 4) {
-                System.out.println("Syötä poistettavan työntekijän tunnus (Id): ");
-                int id = Integer.valueOf(reader.nextLine());
-                Person removedPerson = personnel.getEmployee(id);
-                System.out.println("Työntekijä - " + removedPerson.toString() + " poistettu.");
-                personnel.removeEmaployee(id);
-            }
-            
+
         }
+    }
+
+    private void addNewPerson() {
+        System.out.print("Syötä uuden henkilön etunimi: ");
+        String firtsName = Reader.nextLine();
+        System.out.print("Syötä uuden henkilön sukunimi: ");
+        String lastName = Reader.nextLine();
+        System.out.print("Syötä uuden henkilön syntymäpäivän muodossa vvvvMMdd: ");
+        String birthDate = Reader.nextLine();
+        System.out.print("Syötä uuden henkilön sukupuoli (mies/nainen) muodossa M/N: ");
+        String gender = Reader.nextLine();
+        Person person = new Person(1, lastName, firtsName, birthDate, gender);
+        System.out.println(Persons.addPerson(person));
+    }
+
+    private void deletePerson() {
+        System.out.println(Persons.toString());
+        System.out.println("Syötä järjestelmästä poistettavan henkilön tunnus (Id): ");
+        int id = Integer.valueOf(Reader.nextLine());
+        System.out.println(Persons.deletePerson(id));
+    }
+
+    private void deleteEmployee() {
+        System.out.println(Personnel.toString());
+        System.out.println("Syötä poistettava tehtäväkiinnitys työntekijän tunnuksella (Id): ");
+        int employeeId = Integer.valueOf(Reader.nextLine());
+        if (Personnel.getEmployees().containsKey(employeeId)) {
+            System.out.println(Personnel.deleteEmployee(employeeId));
+        } else {
+            System.out.println("Virheellinen id!");
+        }
+    }
+
+    private void getEmployeeById() {
+        System.out.println("Syötä tehtävään kiinnitetyn työntekijän tunnus (Id) hakua varten: ");
+        int employeeId = Integer.valueOf(Reader.nextLine());
+        System.out.println(Personnel.getEmployee(employeeId).toString());
+    }
+
+    private void addNewEmployee() {
+        System.out.println(Persons.toString());
+        System.out.println("");
+        System.out.print("Syötä henkilön tunnus (Id) yllä olevasta listasta tehtävään kiinnitystä varten: ");
+        int id = Integer.valueOf(Reader.nextLine());
+        Person person = Persons.getPerson(id);
+        System.out.print("Syötä tehtävän titteli: ");
+        String position = Reader.nextLine();
+        System.out.print("Syötä tehtävän aloitus pvm muodossa vvvvMMdd: ");
+        String startingDate = Reader.nextLine();
+        System.out.print("Syötä tehtävän vaativuusluokka (1-3): ");
+        int competenceClass = Integer.valueOf(Reader.nextLine());
+        System.out.print("Onko työsopimus toistaiseksi voimassa (k) tai (ei)? ");
+        String isPermanentStr = Reader.nextLine();
+        boolean isPermanentEmployment = isPermanentStr.equalsIgnoreCase("k");
+        System.out.print("Syötä työntekijän yksikkö. Vaihtoehdot: yksikkö-y, yksikkö-x, yksikkö-c: ");
+        String unit = Reader.nextLine();
+        System.out.print("Syötä työntekijän suoritusarviointi prosentti (7%-50%)muodossa esim. 7: ");
+        int performanceRate = Integer.valueOf(Reader.nextLine());
+        System.out.print("Syötä tehtävän rooli (esimies/työntekijä) muodossa e/t: ");
+        String role = Reader.nextLine();
+        boolean isUnitSupervisor = role.equalsIgnoreCase("e");
+        Employee employee = new Employee(id, position, startingDate, competenceClass, isPermanentEmployment, unit, performanceRate, isUnitSupervisor, person);
+        System.out.println(Personnel.addEmployee(employee, Persons));
+
+    }
+
+    private void updateEmployee() {
+        System.out.println(Personnel.toString());
+        System.out.println("");
+        System.out.print("Anna tehtävään kiinnitetyn työntekijän tunnus (Id) tietojen muokkaamista varten: ");
+        int id = Integer.valueOf(Reader.nextLine());
+        if (!Personnel.getEmployees().containsKey(id)) {
+            System.out.println("Virheellinen tunnus!\n");
+            return;
+        }
+        Employee employee = Personnel.getEmployee(id);
+        System.out.print("Muuta nykyisen tittelin: (" + employee.getPosition() + ") tyhjällä nykyinen jää voimaan: ");
+        String position = Reader.nextLine();
+        if (position.length() > 0) {
+            employee.setPosition(position);
+        }
+        System.out.print("Muuta nykyinen vaativuusluokka: (" + employee.getCompetenceClass() + ") (1 - 3) tyhjällä nykyinen jää voimaan: ");
+        String competenceClassStr = Reader.nextLine();
+        if (competenceClassStr.length() > 0) {
+            int competenceClass = Integer.valueOf(competenceClassStr);
+            employee.setCompetenceClass(competenceClass);
+        }
+
+        System.out.print("Muuta nykyinen työsopimusmuoto: (" + employee.getIsPermanentEmploymentStr() + ") vakituinen = (v), määräaikanen = (m), tyhjällä nykyinen jää voimaan: ");
+        String isPermanentStr = Reader.nextLine();
+        if (isPermanentStr.equalsIgnoreCase("v")) {
+            employee.setIsPermanentEmployment(Boolean.TRUE);
+        } else if (isPermanentStr.equalsIgnoreCase("m")) {
+            employee.setIsPermanentEmployment(Boolean.FALSE);
+        }
+        System.out.print("Muuta nykyinen yksikkö: (" + employee.getUnit() + ") tyhjällä nykyinen jää voimaan: ");
+        String unit = Reader.nextLine();
+        if (unit.length() > 0) {
+            employee.setUnit(unit);
+        }
+        System.out.print("Muuta nykyinen suoritusarviointi: (" + employee.getPerformanceRate() + "%) (7-50) tyhjällä nykyinen jää voimaan: ");
+        String PerformanceRateStr = Reader.nextLine();
+        if (PerformanceRateStr.length() > 0) {
+            int PerformanceRate = Integer.valueOf(PerformanceRateStr);
+            employee.setPerformanceRate(PerformanceRate);
+        }
+        System.out.print("Muuta nykyinen tehtävän rooli: (" + employee.getIsUnitSupervisorStr() + ") esimies - (e) työntekijä - (t) tyhjällä nykyinen jää voimaan: ");
+        String isUnitSupervisorStr = Reader.nextLine();
+        if (isUnitSupervisorStr.equalsIgnoreCase("e")) {
+            employee.setIsUnitSupervisor(Boolean.TRUE);
+        } else if (isUnitSupervisorStr.equalsIgnoreCase("t")) {
+            employee.setIsUnitSupervisor(Boolean.FALSE);
+        }
+        System.out.println(Personnel.updateEmployee(employee, id));
+
     }
 
 }
