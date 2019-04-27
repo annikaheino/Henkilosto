@@ -22,7 +22,7 @@ public class Employee {
     public Employee(Integer Id, String Position, String StartingDate, Integer CompetenceClass, Boolean IsPermanentEmployment, String Unit, Integer PerformanceRate, Boolean IsUnitSupervisor, Person Person) {
         this.Id = Id;
         this.Position = Position;
-        this.StartingDate = new Utils().string_yyyyMMdd_ToLocalDate(StartingDate);
+        this.StartingDate = Utils.string_yyyyMMdd_ToLocalDate(StartingDate);
         this.CompetenceClass = CompetenceClass;
         this.IsPermanentEmployment = IsPermanentEmployment;
         this.Unit = Unit;

@@ -1,5 +1,6 @@
 package personnel;
 
+import data.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +27,7 @@ public class Personnel {
 
     public String addEmployee(Employee employee, Persons persons) {
 //        int key = Employees.size() > 0 ? Collections.max(Employees.keySet()) + 1 : 1;
-        try (Connection connection = Utils.connect();
+        try (Connection connection = DBConnection.connect();
                 PreparedStatement stmt = connection.prepareStatement(""
                         + "INSERT INTO Employees"
                         + "(Position, "
@@ -56,7 +57,7 @@ public class Personnel {
     }
 
     public String updateEmployee(Employee employee, Integer Id) {
-        try (Connection connection = Utils.connect();
+        try (Connection connection = DBConnection.connect();
                 PreparedStatement stmt = connection.prepareStatement(""
                         + "UPDATE Employees SET "
                         + "Position = ?,"
@@ -85,7 +86,7 @@ public class Personnel {
     public String deleteEmployee(Integer id) {
 
         String deletePersonSQL = "DELETE FROM Employees WHERE Id = ?";
-        try (Connection conn = Utils.connect();
+        try (Connection conn = DBConnection.connect();
                 PreparedStatement stmt = conn.prepareStatement(deletePersonSQL)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -101,7 +102,7 @@ public class Personnel {
     public Employee getEmployee(int id) {
         return this.Employees.get(id);
     }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -113,7 +114,7 @@ public class Personnel {
     private void initializeOrRefreshEmployees(Persons persons) {
         String SelectAllEmployees = "SELECT * FROM Employees";
 
-        try (Connection conn = Utils.connect();
+        try (Connection conn = DBConnection.connect();
                 PreparedStatement stmt = conn.prepareStatement(SelectAllEmployees);
                 ResultSet rs = stmt.executeQuery();) {
 

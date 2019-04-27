@@ -1,5 +1,7 @@
 package personnel;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -10,11 +12,13 @@ public class PersonnelUI {
 
     private final Persons Persons;
     private final Personnel Personnel;
+    private final Salaries Salaries;
     private final Scanner Reader;
 
     public PersonnelUI() {
         this.Persons = new Persons();
         this.Personnel = new Personnel(Persons);
+        this.Salaries = new Salaries();
         this.Reader = new Scanner(System.in);
     }
 
@@ -33,15 +37,17 @@ public class PersonnelUI {
             System.out.println("7 - poista työntekijän tehtäväkiinnitys tunnuksella (Id)");
             System.out.println("8 - muokkaa tehtävään kiinnitetyn työntekijän tietoja tunnuksella (Id)");
 
-            System.out.println("Mitä tehdään?");
+            System.out.println();
+            System.out.print("Mitä tehdään? ");
 
-            int komento = Integer.valueOf(Reader.nextLine());
+            int komento = Utils.validateNumberSelection(Reader.nextLine());
 
             switch (komento) {
                 case 0:
                     break loop;
                 case 1:
                     System.out.println(Persons.toString());
+                    promtAnyKey();
                     break;
                 case 2:
                     addNewPerson();
@@ -50,7 +56,7 @@ public class PersonnelUI {
                     deletePerson();
                     break;
                 case 4:
-                    System.out.println(Personnel.toString());
+                    listEmployeesAndSalaries();
                     break;
                 case 5:
                     addNewEmployee();
@@ -71,17 +77,26 @@ public class PersonnelUI {
         }
     }
 
+    private void promtAnyKey() {
+        System.out.println("");
+        System.out.print("Jatka painamalla \"Enter\"... ");
+        Reader.nextLine();
+        System.out.println("");
+
+    }
+
     private void addNewPerson() {
         System.out.print("Syötä uuden henkilön etunimi: ");
         String firtsName = Reader.nextLine();
         System.out.print("Syötä uuden henkilön sukunimi: ");
         String lastName = Reader.nextLine();
         System.out.print("Syötä uuden henkilön syntymäpäivän muodossa vvvvMMdd: ");
-        String birthDate = Reader.nextLine();
+        String birthDate = Utils.validatePersonAge(Reader.nextLine());
         System.out.print("Syötä uuden henkilön sukupuoli (mies/nainen) muodossa M/N: ");
-        String gender = Reader.nextLine();
+        String gender = Utils.validateGender(Reader.nextLine());
         Person person = new Person(1, lastName, firtsName, birthDate, gender);
         System.out.println(Persons.addPerson(person));
+        promtAnyKey();
     }
 
     private void deletePerson() {
@@ -89,6 +104,18 @@ public class PersonnelUI {
         System.out.println("Syötä järjestelmästä poistettavan henkilön tunnus (Id): ");
         int id = Integer.valueOf(Reader.nextLine());
         System.out.println(Persons.deletePerson(id));
+        promtAnyKey();
+    }
+
+    private void listEmployeesAndSalaries() {
+        Personnel.getEmployees().forEach((key, employee) -> {
+            BigDecimal employeeSalary = Utils.getMoneyRepresentation(
+                    employee.getPerformanceRate(),
+                    Salaries.getSalaryByKey(employee.getCompetenceClass()));
+            System.out.println(key + ": " + employee.toString() + ", €" + employeeSalary);
+            promtAnyKey();
+        });
+
     }
 
     private void deleteEmployee() {
@@ -97,6 +124,7 @@ public class PersonnelUI {
         int employeeId = Integer.valueOf(Reader.nextLine());
         if (Personnel.getEmployees().containsKey(employeeId)) {
             System.out.println(Personnel.deleteEmployee(employeeId));
+            promtAnyKey();
         } else {
             System.out.println("Virheellinen id!");
         }
@@ -106,6 +134,7 @@ public class PersonnelUI {
         System.out.println("Syötä tehtävään kiinnitetyn työntekijän tunnus (Id) hakua varten: ");
         int employeeId = Integer.valueOf(Reader.nextLine());
         System.out.println(Personnel.getEmployee(employeeId).toString());
+        promtAnyKey();
     }
 
     private void addNewEmployee() {
@@ -117,7 +146,8 @@ public class PersonnelUI {
         System.out.print("Syötä tehtävän titteli: ");
         String position = Reader.nextLine();
         System.out.print("Syötä tehtävän aloitus pvm muodossa vvvvMMdd: ");
-        String startingDate = Reader.nextLine();
+        String startingDate = Utils.validateEmploymentStartingDate(Reader.nextLine());
+//        String startingDate = Reader.nextLine();
         System.out.print("Syötä tehtävän vaativuusluokka (1-3): ");
         int competenceClass = Integer.valueOf(Reader.nextLine());
         System.out.print("Onko työsopimus toistaiseksi voimassa (k) tai (ei)? ");
@@ -132,6 +162,7 @@ public class PersonnelUI {
         boolean isUnitSupervisor = role.equalsIgnoreCase("e");
         Employee employee = new Employee(id, position, startingDate, competenceClass, isPermanentEmployment, unit, performanceRate, isUnitSupervisor, person);
         System.out.println(Personnel.addEmployee(employee, Persons));
+        promtAnyKey();
 
     }
 
@@ -183,6 +214,7 @@ public class PersonnelUI {
             employee.setIsUnitSupervisor(Boolean.FALSE);
         }
         System.out.println(Personnel.updateEmployee(employee, id));
+        promtAnyKey();
 
     }
 

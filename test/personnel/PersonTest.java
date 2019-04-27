@@ -72,7 +72,7 @@ public class PersonTest {
         String expResult = "TestFirstName";
         String result = person.getFirstName();
         assertNotEquals(expResult, result);
-        expResult = Utils.capitlizeString(expResult);
+        expResult = Utils.capitalizeString(expResult);
         assertEquals(expResult, result);
     }
 

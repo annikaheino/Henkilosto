@@ -1,5 +1,6 @@
 package personnel;
 
+import data.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,7 +40,7 @@ public class Persons {
     }
 
     public String addPerson(Person person) {
-        try (Connection connection = Utils.connect();
+        try (Connection connection = DBConnection.connect();
                 PreparedStatement stmt = connection.prepareStatement(""
                         + "INSERT INTO Persons"
                         + "(LastName, FirstName, BirthDate, Gender)"
@@ -60,7 +61,7 @@ public class Persons {
 
     public String deletePerson(Integer id) {
         String deletePersonSQL = "DELETE FROM Persons WHERE Id = ?";
-        try (Connection conn = Utils.connect();
+        try (Connection conn = DBConnection.connect();
                 PreparedStatement stmt = conn.prepareStatement(deletePersonSQL)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -77,7 +78,7 @@ public class Persons {
         PersonList.clear();
         String selectAllPersonsSQL = "SELECT * FROM Persons";
 
-        try (Connection conn = Utils.connect();
+        try (Connection conn = DBConnection.connect();
                 PreparedStatement stmt = conn.prepareStatement(selectAllPersonsSQL);
                 ResultSet rs = stmt.executeQuery();) {
 

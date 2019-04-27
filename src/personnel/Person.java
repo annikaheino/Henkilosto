@@ -17,10 +17,10 @@ public class Person {
 
     public Person(Integer id, String LastName, String FirstName, String BirthDate, String Gender ) {
         this.Id = id;
-        this.LastName = Utils.capitlizeString(LastName);
-        this.FirstName = Utils.capitlizeString(FirstName);
+        this.LastName = Utils.capitalizeString(LastName);
+        this.FirstName = Utils.capitalizeString(FirstName);
         this.BirthDate = Utils.string_yyyyMMdd_ToLocalDate(BirthDate);
-        this.Gender = Utils.capitlizeString(Gender);
+        this.Gender = Gender;
     }
 
     public LocalDate getBirthDate() {
@@ -41,7 +41,7 @@ public class Person {
     }
 
     public void setFirstName(String FirstName) {
-        this.FirstName = Utils.capitlizeString(FirstName);
+        this.FirstName = Utils.capitalizeString(FirstName);
     }
 
     public String getLastName() {
@@ -49,7 +49,7 @@ public class Person {
     }
 
     public void setLastName(String LastName) {
-        this.LastName = Utils.capitlizeString(LastName);
+        this.LastName = Utils.capitalizeString(LastName);
     }
 
     public String getGender() {
@@ -57,7 +57,7 @@ public class Person {
     }
 
     public void setGender(String Gender) {
-        this.Gender = Utils.capitlizeString(Gender);
+        this.Gender = Utils.capitalizeString(Gender);
     }
     
     public String getAgeInYears() {
