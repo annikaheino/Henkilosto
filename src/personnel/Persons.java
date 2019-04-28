@@ -38,6 +38,14 @@ public class Persons {
                 .filter(person -> Objects.equals(person.getId(), id))
                 .findFirst().get();
     }
+    public Person getPersonByFirstNameLastNameBirthdayGender(Person p) {
+        return PersonList.stream()
+                .filter(person -> Objects.equals(person.getBirthDate(), p.getBirthDate()))
+                .filter(person -> Objects.equals(person.getFirstName(), p.getFirstName()))
+                .filter(person -> Objects.equals(person.getLastName(), p.getLastName()))
+                .filter(person -> Objects.equals(person.getGender(), p.getGender()))
+                .findFirst().get();
+    }
 
     public String addPerson(Person person) {
         try (Connection connection = DBConnection.connect();
@@ -56,7 +64,7 @@ public class Persons {
         }
 
         initializeOrRefreshPersons();
-        return "Uusi henkilö lisätty: " + person.toString();
+        return "Uusi henkilö lisätty: " + getPersonByFirstNameLastNameBirthdayGender(person).toString();
     }
 
     public String deletePerson(Integer id) {
@@ -72,6 +80,10 @@ public class Persons {
         Person person = getPerson(id);
         initializeOrRefreshPersons();
         return "Henkilö poistettu: " + person.toString();
+    }
+    
+    public boolean isPersonIdFound(Integer id) {
+        return PersonList.stream().anyMatch((person) -> (Objects.equals(person.getId(), id)));
     }
 
     private void initializeOrRefreshPersons() {

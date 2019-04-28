@@ -109,6 +109,7 @@ public class Employee {
         sb.append(Person.getLastName())
                 .append(" ").append(Person.getFirstName()).append(", ").append(Person.getGender().equals("F") ? "Nainen, " : "Mies, ")
                 .append("ikä - ").append(Person.getAgeInYears()).append(", ")
+                .append("titteli - ").append(getPosition()).append(", ")
                 .append("aloitti - ").append(StartingDate.format(ldtFormatter)).append(", ")
                 .append("vaativuusluokka - ").append(CompetenceClass).append(", ")
                 .append("työsuhde - ").append(IsPermanentEmployment ? "vakituinen, " : "määräaikainen, ")

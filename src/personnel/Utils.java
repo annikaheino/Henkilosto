@@ -16,6 +16,8 @@ import java.util.Scanner;
  */
 public class Utils {
 
+    static Scanner reader = new Scanner(System.in, "UTF-8");
+
     protected static LocalDate string_yyyyMMdd_ToLocalDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate localDate = LocalDate.parse(date, formatter);
@@ -39,17 +41,16 @@ public class Utils {
     }
 
     protected static Integer validateNumberSelection(String entry) {
-        Scanner reader = new Scanner(System.in);
         while (true) {
             if (!entry.matches("-?\\d+(\\.\\d+)?")) {
-                System.out.print("Söytä numero (0 - 8): ");
+                System.out.print("Syötä numero (0 - 8): ");
                 entry = reader.nextLine();
                 continue;
             }
             if (Integer.valueOf(entry) >= 0 && Integer.valueOf(entry) < 9) {
                 break;
             }
-            System.out.print("Söytä numero (0 - 8): ");
+            System.out.print("Syötä numero (0 - 8): ");
             entry = reader.nextLine();
 
         }
@@ -58,10 +59,9 @@ public class Utils {
     }
 
     static String validateEmploymentStartingDate(String entry) {
-        Scanner reader = new Scanner(System.in);
         while (true) {
             if (!entry.matches("-?\\d+(\\.\\d+)?") || entry.length() != 8) {
-                System.out.print("Söytä päivämäärä muodossa vvvvMMdd: ");
+                System.out.print("Syötä päivämäärä muodossa vvvvMMdd: ");
                 entry = reader.nextLine();
                 continue;
             }
@@ -72,12 +72,12 @@ public class Utils {
                 if ((date.isAfter(LocalDate.now()) && months < 6) || (date.isBefore(LocalDate.now()) && years < 2)) {
                     break;
                 }
-                System.out.print("Aloitus PVM voi olla korkeintaan 2 vuotta vanha tai 6 kuukautta tulevaisuuteen!\n\nSöytä päivämäärä muodossa vvvvMMdd: ");
+                System.out.print("Aloitus PVM voi olla korkeintaan 2 vuotta vanha tai 6 kuukautta tulevaisuuteen!\n\nSyötä päivämäärä muodossa vvvvMMdd: ");
                 entry = reader.nextLine();
                 continue;
             }
 
-            System.out.print("Söytä päivämäärä muodossa vvvvMMdd: ");
+            System.out.print("Syötä päivämäärä muodossa vvvvMMdd: ");
             entry = reader.nextLine();
 
         }
@@ -86,10 +86,9 @@ public class Utils {
     }
 
     static String validatePersonAge(String entry) {
-        Scanner reader = new Scanner(System.in);
         while (true) {
             if (!entry.matches("-?\\d+(\\.\\d+)?") || entry.length() != 8) {
-                System.out.print("Söytä syntymäpäivä muodossa vvvvMMdd: ");
+                System.out.print("Syötä syntymäpäivä muodossa vvvvMMdd: ");
                 entry = reader.nextLine();
                 continue;
             }
@@ -99,12 +98,13 @@ public class Utils {
                 if (years > 17 && years < 80) {
                     break;
                 }
-                System.out.print("Emme palkkaa alaikäisiä tai 80+ vuotiaita!\n\nSöytä syntymäpäivä muodossa vvvvMMdd: ");
+                System.out.println("Emme palkkaa alaikäisiä tai 80+ vuotiaita!");
+                System.out.print("Syötä syntymäpäivä muodossa vvvvMMdd: ");
                 entry = reader.nextLine();
                 continue;
             }
 
-            System.out.print("Söytä syntymäpäivä muodossa vvvvMMdd: ");
+            System.out.print("Syötä syntymäpäivä muodossa vvvvMMdd: ");
             entry = reader.nextLine();
 
         }
@@ -134,7 +134,6 @@ public class Utils {
     }
 
     protected static String validateGender(String entry) {
-        Scanner reader = new Scanner(System.in);
         while (true) {
             if ("M".equals(capitalizeString(entry)) || "N".equals(capitalizeString(entry))) {
                 break;
@@ -148,5 +147,116 @@ public class Utils {
 
         return capitalizeString(entry);
 
+    }
+
+    static boolean isZeroKeyPressed(String entry) {
+        if (entry.equals("0")) {
+            System.out.println("Olet poistunut päävalikkoon.\n");
+            return entry.equals("0");
+        }
+        return false;
+    }
+
+    static int validatePersonId(String stringId, Persons Persons) {
+        while (true) {
+            if (stringId.matches("-?\\d+(\\.\\d+)?") && Persons.isPersonIdFound(Integer.valueOf(stringId))) {
+                return Integer.valueOf(stringId);
+            }
+            System.out.print("Syötä henkilön tunnus (id) henkilölistasta!");
+            stringId = reader.nextLine();
+        }
+    }
+
+    static int validateCompetenceClass(String strCompetenceClass) {
+        while (!(strCompetenceClass.equals("1") || strCompetenceClass.equals("2") || strCompetenceClass.equals("3"))) {
+            System.out.print("Syötä vaativusluokka (1 - 3): ");
+            strCompetenceClass = reader.nextLine();
+        }
+        return Integer.valueOf(strCompetenceClass);
+    }
+
+    static boolean validateEiOrK(String permanentStr) {
+        while (!(permanentStr.equalsIgnoreCase("k") || permanentStr.equalsIgnoreCase("ei"))) {
+            System.out.print("Syötä (k) tai (ei): ");
+            permanentStr = reader.nextLine();
+        }
+        return permanentStr.equalsIgnoreCase("k");
+    }
+
+    static String validateWorkingUnit(String unit) {
+
+        while (true) {
+            if (unit.equalsIgnoreCase("yksikkö-y") || unit.equalsIgnoreCase("yksikkö-x") || unit.equalsIgnoreCase("yksikkö-c")) {
+                return unit;
+            }
+            if (unit.length() == 9) {
+                String scandinavicOHexCode = String.format("%x", (int) unit.charAt(6));
+                String chunkBefore = unit.substring(0, 6);
+                String chunkAfter = unit.substring(7, 9);
+                if (chunkBefore.equalsIgnoreCase("yksikk")
+                        && (chunkAfter.equalsIgnoreCase("-y") || chunkAfter.equalsIgnoreCase("-x") || chunkAfter.equalsIgnoreCase("-c"))
+                        && scandinavicOHexCode.equals("fffd")) {
+                    if (chunkAfter.equals("-y")) {
+                        return "yksikkö-y";
+                    }
+                    if (chunkAfter.equals("-x")) {
+                        return "yksikkö-x";
+                    }
+                    if (chunkAfter.equals("-c")) {
+                        return "yksikkö-c";
+                    }
+                }
+            }
+            System.out.print("Syötä työntekijän yksikkö. Vaihtoehdot: yksikkö-y, yksikkö-x, yksikkö-c: ");
+            unit = reader.nextLine();
+        }
+    }
+
+    static int validatePerformanceRate(String strPerformaneRate) {
+        while (true) {
+            if (strPerformaneRate.matches("-?\\d+(\\.\\d+)?")) {
+                int performanceRate = Integer.valueOf(strPerformaneRate);
+                if (performanceRate >= 7 && performanceRate <= 50) {
+                    return performanceRate;
+                }
+            }
+            System.out.print("Syötä työntekijän suoritusarviointi prosentti (7%-50%)muodossa esim. 7! ");
+            strPerformaneRate = reader.nextLine();
+        }
+    }
+
+    static boolean isUnitSupervisor(String role) {
+        while (!(role.equalsIgnoreCase("e") || role.equalsIgnoreCase("t"))) {
+            System.out.print("Syötä (e) - esimeies tai (t) - työntekijä: ");
+            role = reader.nextLine();
+        }
+        return role.equalsIgnoreCase("e");
+    }
+
+    static int validateEmployeeId(String stringId, Personnel Personnel) {
+        while (true) {
+            if (stringId.matches("-?\\d+(\\.\\d+)?") && Personnel.getEmployees().containsKey(Integer.valueOf(stringId))) {
+                return Integer.valueOf(stringId);
+            }
+            System.out.print("Syötä oikea työntekijän tunnus (id)!");
+            stringId = reader.nextLine();
+        }
+
+    }
+
+    static String validatePersonFirstName(String firstName) {
+        while(firstName.length() < 0 || firstName.length() > 30 || !firstName.toLowerCase().matches("[a-z]+")){
+            System.out.print("Syötä etunimeksi vain merrkkejä a-z: ");
+            firstName = reader.nextLine();
+        }
+        return firstName;
+    }
+
+    static String validatePersonLastName(String lastName) {
+        while(lastName.length() < 0 || lastName.length() > 30 || !lastName.toLowerCase().matches("[a-z]+")){
+            System.out.print("Syötä sukunimeksi vain merrkkejä a-z: ");
+            lastName = reader.nextLine();
+        }
+        return lastName;
     }
 }
