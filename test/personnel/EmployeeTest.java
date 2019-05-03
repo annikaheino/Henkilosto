@@ -5,7 +5,6 @@
  */
 package personnel;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -161,7 +160,7 @@ public class EmployeeTest {
         String[] expResultArr = {"Lastname", "Name", "Mies", "Opettaja", "aloitti - 01.05.2019", "vaativuusluokka - 3", "työsuhde - vakituinen", "yksikkö - yksikkö-x", "työntekijä", "vaativuusluokka - 7"};
         String result = Employee.toString();
         for (String string : expResultArr) {
-            assertThat(result, CoreMatchers.containsString(string));
+            assertTrue(result.contains(string));
         }
     }
     
