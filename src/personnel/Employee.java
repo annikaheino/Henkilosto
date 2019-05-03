@@ -31,7 +31,11 @@ public class Employee {
         this.Person = Person;
     }
 
-    public String getPosition() {
+    public Integer getId() {
+        return Id;
+    }
+    
+      public String getPosition() {
         return Position;
     }
 
@@ -81,6 +85,10 @@ public class Employee {
 
     public Person getPerson() {
         return Person;
+    }
+    
+    public Employee getEmployeeByPerson(Person person) {
+        return this.getPerson().equals(person) ? this : null;
     }
 
     public void setPerson(Person Person) {

@@ -94,15 +94,18 @@ public class Personnel {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        Employee employee = getEmployee(id);
-        Employees.remove(id);
-        return "Työntekijä poistettu:\n" + employee.toString();
+        if (Employees.containsKey(id)) {
+            Employee employee = getEmployee(id);
+            Employees.remove(id);
+            return "Työntekijä poistettu:\n" + employee.toString();
+        }
+        return "Tunnusta " + id + " ei ole olemassa!";
     }
 
     public Employee getEmployee(int id) {
         return this.Employees.get(id);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
